@@ -1,19 +1,30 @@
 import { Button, FormControl, Input, InputLabel } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../css/App.css";
 import Todo from "./Todo";
+import db from "../firebase";
+import firebase from "firebase";
 
 function App() {
-  const [todos, setTodos] = useState([
-    "Take dog for a walk",
-    "Buy groceries",
-    "another element",
-  ]);
+  const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
+
+  useEffect(() => {
+    db.collection("todos")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setTodos(snapshot.docs.map((doc) => doc.data().todo));
+      });
+  }, []);
 
   const addItem = (event) => {
     event.preventDefault();
-    setTodos([...todos, input]);
+
+    db.collection("todos").add({
+      todo: input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
     setInput("");
   };
 
