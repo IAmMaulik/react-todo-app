@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "../css/App.css";
 import Todo from "./Todo";
 import db from "../firebase";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -32,7 +32,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>This is a heading!</h1>
+      <h1>To-Do List Website</h1>
       <form>
         <FormControl>
           <InputLabel>Write a To-Do Item</InputLabel>
@@ -48,7 +48,7 @@ function App() {
           variant="contained"
           color="primary"
         >
-          Add Todo
+          Add To-Do Item
         </Button>
       </form>
 
