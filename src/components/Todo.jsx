@@ -9,11 +9,18 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import db from "../firebase";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import DeleteIcon from "@material-ui/icons/Delete";
+import UpdateIcon from "@material-ui/icons/Update";
+import EditIcon from "@material-ui/icons/Edit";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
     width: 400,
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
@@ -22,12 +29,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const theme = createMuiTheme({
+  palette: {
+    primary: green,
+  },
+});
+
 const Todo = (props) => {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const classes = useStyles();
 
   const updateItem = (e) => {
+    e.preventDefault();
     db.collection("todos").doc(props.text.id).set(
       {
         todo: input,
@@ -40,15 +54,31 @@ const Todo = (props) => {
 
   return (
     <>
-      <Modal open={open} onClose={(e) => setOpen(false)}>
+      <Modal
+        style={{ alignItems: "center", justifyContent: "center" }}
+        open={open}
+        onClose={(e) => setOpen(false)}
+      >
         <div className={classes.paper}>
-          <h1>I am a modal</h1>
-          <input
-            placeholder={props.text.todo}
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-          />
-          <Button onClick={updateItem}>Update</Button>
+          <form>
+            <h1>Edit Item</h1>
+            <input
+              placeholder={props.text.todo}
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+            />
+            <ThemeProvider theme={theme}>
+              <Button
+                onClick={updateItem}
+                type="submit"
+                variant="contained"
+                color="primary"
+                startIcon={<UpdateIcon />}
+              >
+                Update
+              </Button>
+            </ThemeProvider>
+          </form>
         </div>
       </Modal>
       <List>
@@ -59,12 +89,24 @@ const Todo = (props) => {
             secondary="Dummy Deadline ⏰"
           />
         </ListItem>
-        <button onClick={(e) => setOpen(true)}>Edit</button>
-        <DeleteForeverIcon
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<EditIcon />}
+          onClick={(e) => setOpen(true)}
+        >
+          Edit
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<DeleteIcon />}
           onClick={(event) => {
             db.collection("todos").doc(props.text.id).delete();
           }}
-        />
+        >
+          Delete
+        </Button>
       </List>
     </>
   );
