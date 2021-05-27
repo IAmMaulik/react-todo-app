@@ -1,5 +1,8 @@
 import {
   Button,
+  FormControl,
+  Input,
+  InputLabel,
   List,
   ListItem,
   ListItemAvatar,
@@ -7,6 +10,7 @@ import {
   makeStyles,
   Modal,
 } from "@material-ui/core";
+import "../css/Todo.css"
 import React, { useState } from "react";
 import db from "../firebase";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -60,13 +64,18 @@ const Todo = (props) => {
         onClose={(e) => setOpen(false)}
       >
         <div className={classes.paper}>
-          <form>
-            <h1>Edit Item</h1>
-            <input
-              placeholder={props.text.todo}
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-            />
+          <h1 className="centered-items">Edit Item</h1>
+          <form className="centered-items">
+            <div className="form_input">
+              <FormControl>
+                <InputLabel>Edit the item</InputLabel>
+                <Input
+                  placeholder={props.text.todo}
+                  value={input}
+                  onChange={(event) => setInput(event.target.value)}
+                />
+              </FormControl>
+            </div>
             <ThemeProvider theme={theme}>
               <Button
                 onClick={updateItem}
